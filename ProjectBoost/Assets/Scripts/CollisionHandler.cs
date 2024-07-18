@@ -4,6 +4,15 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] float levelLoadDelay = 1f;
+    [SerializeField] AudioClip crashSound;
+    [SerializeField] AudioClip sucessSound;
+
+    AudioSource audioSource;
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     void OnCollisionEnter(Collision other)
     {
         switch (other.gameObject.tag)
@@ -26,12 +35,16 @@ public class CollisionHandler : MonoBehaviour
     {
         GetComponent<Movement>().enabled = false;
         Invoke("ReloadLevel", levelLoadDelay);
+        audioSource.PlayOneShot(crashSound);
+
     }
 
     void StartSucessSquence()
     {
         GetComponent<Movement>().enabled = false;
         Invoke("LoadNextLevel", levelLoadDelay);
+        audioSource.PlayOneShot(sucessSound);
+        
     }
     //To load the scene we are currently on when the rocket crashes to an unfriendly object 
     void ReloadLevel()

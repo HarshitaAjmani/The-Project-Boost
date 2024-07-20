@@ -4,8 +4,13 @@ using UnityEngine.SceneManagement;
 public class CollisionHandler : MonoBehaviour
 {
     [SerializeField] float levelLoadDelay = 1f;
+
     [SerializeField] AudioClip crashSound;
     [SerializeField] AudioClip sucessSound;
+        
+    [SerializeField] ParticleSystem crashParticles;
+    [SerializeField] ParticleSystem sucessParticles;
+
 
     AudioSource audioSource;
 
@@ -46,6 +51,7 @@ public class CollisionHandler : MonoBehaviour
         Invoke("ReloadLevel", levelLoadDelay);
         audioSource.Stop();
         audioSource.PlayOneShot(crashSound);
+        crashParticles.Play();
 
     }
 
@@ -56,7 +62,8 @@ public class CollisionHandler : MonoBehaviour
         Invoke("LoadNextLevel", levelLoadDelay);
         audioSource.Stop();
         audioSource.PlayOneShot(sucessSound);
-        
+        sucessParticles.Play();
+
     }
     //To load the scene we are currently on when the rocket crashes to an unfriendly object 
     void ReloadLevel()

@@ -9,12 +9,20 @@ public class CollisionHandler : MonoBehaviour
 
     AudioSource audioSource;
 
+    //If this state is true rockect would not perform its usual actions
+    bool isTransitioning = false;
+
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
     void OnCollisionEnter(Collision other)
     {
+        if (isTransitioning)
+        {
+            return; //If the scene is transionting it won't perform the the switch statement and would stop on collision enetr method
+        }
+        
         switch (other.gameObject.tag)
         {
             case "Friendly":
@@ -33,16 +41,20 @@ public class CollisionHandler : MonoBehaviour
 
     void StartCrashSequence()
     {
+        isTransitioning = true;
         GetComponent<Movement>().enabled = false;
         Invoke("ReloadLevel", levelLoadDelay);
+        audioSource.Stop();
         audioSource.PlayOneShot(crashSound);
 
     }
 
     void StartSucessSquence()
     {
+        isTransitioning = true;
         GetComponent<Movement>().enabled = false;
         Invoke("LoadNextLevel", levelLoadDelay);
+        audioSource.Stop();
         audioSource.PlayOneShot(sucessSound);
         
     }
@@ -53,6 +65,7 @@ public class CollisionHandler : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex);
     }
 
+    //To load the next scene when the rocket landa on the landing point/pad.
     void LoadNextLevel()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;

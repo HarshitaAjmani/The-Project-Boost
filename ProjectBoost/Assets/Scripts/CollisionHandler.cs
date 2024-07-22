@@ -16,11 +16,31 @@ public class CollisionHandler : MonoBehaviour
 
     //If this state is true rockect would not perform its usual actions
     bool isTransitioning = false;
+    bool collisonDisable = false;
 
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
     }
+    void Update()
+    {
+        ActionOnDebugKeys();
+
+    }
+
+    void ActionOnDebugKeys()
+    {
+        if (Input.GetKey(KeyCode.L))
+        {
+            LoadNextLevel();
+        }
+        else if (Input.GetKey(KeyCode.C))
+        {
+            collisonDisable = !collisonDisable;  //toggle collsion
+        }
+        
+    }
+
     void OnCollisionEnter(Collision other)
     {
         if (isTransitioning)
@@ -38,8 +58,11 @@ public class CollisionHandler : MonoBehaviour
                 StartSucessSquence();
                 break;
             default:
-                Debug.Log("unFriendly");
-                StartCrashSequence();
+                if (collisonDisable == false)
+                {
+                    Debug.Log("unFriendly");
+                    StartCrashSequence();
+                }
                 break; 
         }
     }
